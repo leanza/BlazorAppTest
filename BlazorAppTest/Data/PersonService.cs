@@ -10,7 +10,7 @@ namespace BlazorAppTest.Data
         public Task<Person[]> GetPersonDataAsync()
         {
             var rng = new Random();
-            return Task.FromResult(Enumerable.Range(1, 10).Select(index => new Person("en", rng.Next(-50, 50))).ToArray());
+            return Task.FromResult(Enumerable.Range(1, 10).Select(index => new Person("en", rng.Next(DateTime.Now.Millisecond))).ToArray());
         }
     }
 }
