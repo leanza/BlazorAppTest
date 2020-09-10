@@ -1,0 +1,108 @@
+﻿@inject BlazorAppTest.Data.PersonService personService
+
+<h1>Person service</h1>
+
+<p>This component demonstrates fetching data from a service.</p>
+@if (personData == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Firstname</th>
+                <th>Lastname</th>
+                <th>Address</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var person in personData)
+            {
+                <tr>
+                    <td>@person.FirstName</td>
+                    <td>@person.LastName</td>
+                    <td>@person.Address.Street</td>
+                    <td>@person.Email</td>
+                    <td>@person.Phone</td>
+                    <td><button class="btn btn-success" @onclick="@(() => Edit(person))"><span class="oi oi-pencil" aria-hidden="true"></span> Edit</button> <button class="btn btn-danger" @onclick="@(() => Delete(person))"><span class="oi oi-trash" aria-hidden="true"></span> Delete</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (showModal)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">@SelectedAction @CurrentUser.FullName</h4>
+                    <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    <p>
+                        FirstName:  @CurrentUser.FirstName <br />
+                        LastName:   @CurrentUser.LastName <br />
+                        Email:      @CurrentUser.Email <br />
+                        Address:    @CurrentUser.Address.Street @CurrentUser.Address.City <br />
+                    </p>
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn" @onclick="@ModalCancel">Cancel</button>
+                    @if (SelectedAction == "Edit")
+                    {
+                        <button type="button" class="btn btn-warning" @onclick=@ModalOk>Ok</button>
+                    }
+                    else
+                    {
+                        <button type="button" class="btn btn-danger" @onclick=@ModalOk>Ok</button>
+                    }
+                </div>
+
+            </div>
+        </div>
+    </div>
+}
+@code {
+    private string SelectedAction = string.Empty;
+    private bool showModal = false;
+    private void ModalShow() => showModal = true;
+    private void ModalCancel() => showModal = false;
+    private Bogus.Person[] personData;
+    private Bogus.Person CurrentUser;
+
+    protected override async Task OnInitializedAsync()
+    {
+        personData = await personService.GetPersonDataAsync();
+    }
+
+    private void Edit(Bogus.Person item)
+    {
+        SelectedAction = "Edit";
+        CurrentUser = item;
+        ModalShow();
+    }
+    private void Delete(Bogus.Person item)
+    {
+        SelectedAction = "Delete";
+        CurrentUser = item;
+        ModalShow();
+    }
+
+    private void ModalOk()
+    {
+        Console.WriteLine("Modal ok");
+        showModal = false;
+    }
+}
