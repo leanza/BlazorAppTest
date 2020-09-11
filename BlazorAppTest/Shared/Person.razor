@@ -43,17 +43,23 @@ else
 
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h4 class="modal-title">@SelectedAction @CurrentUser.FullName</h4>
+                    <h4 class="modal-title">@SelectedAction @CurrentPerson.FullName</h4>
                     <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
                 </div>
 
-                <!-- Modal body -->
+                 <!-- Modal body -->
                 <div class="modal-body">
                     <p>
-                        FirstName:  @CurrentUser.FirstName <br />
-                        LastName:   @CurrentUser.LastName <br />
-                        Email:      @CurrentUser.Email <br />
-                        Address:    @CurrentUser.Address.Street @CurrentUser.Address.City <br />
+                        FirstName:  @CurrentPerson.FirstName <br />
+                        LastName:   @CurrentPerson.LastName <br />
+                        Birthday:   @CurrentPerson.DateOfBirth.ToString("MM-dd-yyyy") <br />
+                        Age:        @(DateTime.Now.Year - CurrentPerson.DateOfBirth.Year) <br />
+                        Email:      @CurrentPerson.Email <br />
+                        Address:    @CurrentPerson.Address.Street @CurrentPerson.Address.City <br />
+                        <hr />
+                        Company:    @CurrentPerson.Company.Name <br />
+                        Catchphrase:@CurrentPerson.Company.CatchPhrase <br />
+                        <hr />                        
                     </p>
                 </div>
 
@@ -80,7 +86,7 @@ else
     private void ModalShow() => showModal = true;
     private void ModalCancel() => showModal = false;
     private Bogus.Person[] personData;
-    private Bogus.Person CurrentUser;
+    private Bogus.Person CurrentPerson;
 
     protected override async Task OnInitializedAsync()
     {
@@ -90,13 +96,13 @@ else
     private void Edit(Bogus.Person item)
     {
         SelectedAction = "Edit";
-        CurrentUser = item;
+        CurrentPerson = item;
         ModalShow();
     }
     private void Delete(Bogus.Person item)
     {
         SelectedAction = "Delete";
-        CurrentUser = item;
+        CurrentPerson = item;
         ModalShow();
     }
 
