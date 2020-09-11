@@ -1,0 +1,53 @@
+﻿@if (Show)
+{
+    <div class="modal fade show" id="myModal" style="display:block" aria-modal="true" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">@Titel</h4>
+                    <button type="button" class="close" @onclick="@ModalCancel">&times;</button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    @ChildContent
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn" @onclick="@ModalCancel">Cancel</button>
+                    <button type="button" class="btn btn-warning" @onclick=@ModalOk>Ok</button>  
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@code{
+
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public string Titel { get; set; }
+
+    [Parameter]
+    public bool Show { get; set; } = false;
+
+
+    [Parameter]
+    public EventCallback OkClicked { get; set; }
+
+    void ModalCancel()
+    {
+        Show = false;
+    }
+    async Task ModalOk()
+    {
+        await OkClicked.InvokeAsync(EventArgs.Empty);
+    }
+
+}
