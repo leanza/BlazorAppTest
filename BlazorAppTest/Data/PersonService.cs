@@ -7,6 +7,7 @@ namespace BlazorAppTest.Data
 {
     public class PersonService
     {
+        //This is new
         public Task<Person[]> GetPersonDataAsync()
         {
             var rng = new Random();
